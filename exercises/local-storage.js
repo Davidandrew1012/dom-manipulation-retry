@@ -38,3 +38,51 @@
  */
 
 // Your code goes here...
+
+document.addEventListener('DOMContentLoaded', function () {
+   const container = document.querySelector('.cardsContainer');
+ 
+   function setFavoritesBackground() {
+     const favorites = JSON.parse(localStorage.getItem('favorites')) || []; // Ensures it's an array or makes as empty array
+     favorites.forEach(id => {
+       const item = document.getElementById(id);
+       if (item) {
+         item.style.backgroundColor = 'red';
+       }
+     });
+   }
+ 
+   function addToFavorites(id) {
+     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+     if (!favorites.includes(id)) {
+       favorites.push(id);
+       localStorage.setItem('favorites', JSON.stringify(favorites));
+     }
+   }
+ 
+   function deleteFromFavorites(id) {
+     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+     favorites = favorites.filter(itemId => itemId !== id);
+     localStorage.setItem('favorites', JSON.stringify(favorites));
+   }
+ 
+   function handleItemClick(event) {
+     const clickedItem = event.target.closest('.card');
+     if (!clickedItem) return;
+ 
+     const itemId = clickedItem.id;
+     const isFavorite = clickedItem.style.backgroundColor === 'red';
+ 
+     if (!isFavorite) {
+       clickedItem.style.backgroundColor = 'red';
+       addToFavorites(itemId);
+     } else {
+       clickedItem.style.backgroundColor = '';
+       deleteFromFavorites(itemId);
+     }
+   }
+ 
+   container.addEventListener('click', handleItemClick);
+ 
+   setFavoritesBackground();
+ });
